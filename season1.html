@@ -19,17 +19,51 @@
     </nav>
   </header>
 
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Identity</span><span class="gold">Leverage</span><span>Authority</span><span class="gold">Posture</span><span>Clarity</span><span class="gold">Standing</span>
+      <span>Identity</span><span class="gold">Leverage</span><span>Authority</span><span class="gold">Posture</span><span>Clarity</span><span class="gold">Standing</span>
+    </div>
+  </div>
+
   <main class="container">
     <section class="pagehead">
       <p class="kicker">Eight declarations. One posture.</p>
-      <h1 class="page-title">Season One</h1>
-      <p class="subtitle">Text-first. Silence-forward. Links open to YouTube.</p>
+      <h1 class="page-title">Season One — IAM<span class="thee">THEE</span>ANSWER</h1>
+      <p class="page-sub">
+        This is not motivation. It is declaration.
+        Episodes link out to YouTube when ready—no embeds, no noise.
+      </p>
+
+      <div class="subbar">
+        <div class="left">
+          <h3 class="title">Subscribe / Follow</h3>
+          <p class="desc">Link these once your platforms are live.</p>
+        </div>
+        <div class="right">
+          <a class="btn ghost disabled" href="#" aria-disabled="true" title="Add Apple link in season1.html">Apple</a>
+          <a class="btn ghost disabled" href="#" aria-disabled="true" title="Add Spotify link in season1.html">Spotify</a>
+          <a class="btn primary disabled" href="#" aria-disabled="true" title="Add YouTube playlist link in season1.html">YouTube</a>
+        </div>
+      </div>
     </section>
 
-    <section id="episodes" class="episodes"></section>
+    <section class="section-title">
+      <h2>Most popular episodes</h2>
+      <p>Thumbnail-first. Verdict-first.</p>
+    </section>
+
+    <section id="popular" class="episode-grid"></section>
+
+    <section class="section-title">
+      <h2>All Season One episodes</h2>
+      <p>Eight declarations. One arc.</p>
+    </section>
+
+    <section id="all" class="episode-grid"></section>
 
     <section class="panel">
-      <h2>Season Trailer (promo)</h2>
+      <h2>Season trailer</h2>
       <p class="quiet">
         Your future didn’t ask for proof. It assumed identity.
         Some skills delay destiny. Some open doors are traps.
@@ -41,7 +75,7 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-inner">
+    <div class="footer-inner">
       <div>
         <div class="footer-title">IAMTHEEANSWER</div>
         <div class="footer-sub">A spoken-word series by Eric Coker.</div>
@@ -56,73 +90,86 @@
 
   <script src="assets/js/episodes.js"></script>
   <script>
-    (function renderEpisodes(){
-      const root = document.getElementById('episodes');
-      const frag = document.createDocumentFragment();
+    function epCard(ep){
+      const youtube = ep.youtubeUrl && ep.youtubeUrl.length > 0;
+      const card = document.createElement('article');
+      card.className = 'ep-card';
 
-      window.IAM_EPISODES.forEach(ep => {
-        const el = document.createElement('article');
-        el.className = 'episode';
+      const thumb = document.createElement('div');
+      thumb.className = 'ep-thumb';
 
-        const top = document.createElement('div');
-        top.className = 'episode-top';
+      const label = document.createElement('div');
+      label.className = 'ep-label';
+      label.textContent = `Episode ${ep.number}`;
 
-        const meta = document.createElement('div');
-        meta.className = 'episode-meta';
+      thumb.appendChild(label);
 
-        const num = document.createElement('div');
-        num.className = 'ep-num';
-        num.textContent = `Episode ${ep.number}`;
+      const body = document.createElement('div');
+      body.className = 'ep-body';
 
-        const title = document.createElement('h3');
-        title.className = 'ep-title';
-        title.textContent = ep.title;
+      const h = document.createElement('h3');
+      h.className = 'ep-title';
+      h.textContent = ep.title;
 
-        const blurb = document.createElement('p');
-        blurb.className = 'ep-blurb';
-        blurb.textContent = ep.blurb;
+      const p = document.createElement('p');
+      p.className = 'ep-blurb';
+      p.textContent = ep.blurb;
 
-        meta.appendChild(num);
-        meta.appendChild(title);
-        meta.appendChild(blurb);
+      const actions = document.createElement('div');
+      actions.className = 'ep-actions';
 
-        const actions = document.createElement('div');
-        actions.className = 'episode-actions';
+      const watch = document.createElement('a');
+      watch.className = 'btn primary';
+      watch.textContent = 'Watch on YouTube';
+      watch.href = youtube ? ep.youtubeUrl : '#';
+      if(!youtube){
+        watch.classList.add('disabled');
+        watch.setAttribute('aria-disabled', 'true');
+        watch.title = 'Add your YouTube link in assets/js/episodes.js';
+      }else{
+        watch.target = '_blank';
+        watch.rel = 'noreferrer';
+      }
 
-        const btn = document.createElement('a');
-        btn.className = 'btn primary';
-        btn.textContent = 'Watch on YouTube';
-        btn.href = ep.youtubeUrl || '#';
-        if (!ep.youtubeUrl) {
-          btn.classList.add('disabled');
-          btn.setAttribute('aria-disabled', 'true');
-          btn.title = 'Add your YouTube link in assets/js/episodes.js';
-        } else {
-          btn.target = '_blank';
-          btn.rel = 'noreferrer';
-        }
+      const details = document.createElement('a');
+      details.className = 'btn ghost';
+      details.textContent = 'Read anchors';
+      details.href = `#ep-${ep.number}`;
 
-        actions.appendChild(btn);
+      actions.appendChild(watch);
+      actions.appendChild(details);
 
-        top.appendChild(meta);
-        top.appendChild(actions);
+      const moments = document.createElement('div');
+      moments.className = 'moments';
+      moments.id = `ep-${ep.number}`;
+      moments.innerHTML = `
+        <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[0]}</div></div>
+        <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[1]}</div></div>
+        <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[2]}</div></div>
+      `;
 
-        const moments = document.createElement('div');
-        moments.className = 'moments';
-        moments.innerHTML = `
-          <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[0]}</div></div>
-          <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[1]}</div></div>
-          <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[2]}</div></div>
-        `;
+      body.appendChild(h);
+      body.appendChild(p);
+      body.appendChild(actions);
 
-        el.appendChild(top);
-        el.appendChild(moments);
+      card.appendChild(thumb);
+      card.appendChild(body);
+      card.appendChild(moments);
 
-        frag.appendChild(el);
-      });
+      return card;
+    }
 
-      root.appendChild(frag);
-    })();
+    const popularNums = new Set([4,5,7]); // change anytime
+    const popularRoot = document.getElementById('popular');
+    const allRoot = document.getElementById('all');
+
+    window.IAM_EPISODES.forEach(ep => {
+      const card = epCard(ep);
+      allRoot.appendChild(card.cloneNode(true));
+      if(popularNums.has(ep.number)){
+        popularRoot.appendChild(card);
+      }
+    });
   </script>
 </body>
 </html>
