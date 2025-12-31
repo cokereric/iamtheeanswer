@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Season One — IAMTHEEANSWER</title>
+  <meta name="description" content="Season One: eight declarations. One posture." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="brand" href="index.html">IAMTHEEANSWER</a>
+      <div class="nav-links">
+        <a class="active" href="season1.html">Season One</a>
+        <a href="watch.html">Watch</a>
+        <a href="about.html">About</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="pagehead">
+      <p class="kicker">Eight declarations. One posture.</p>
+      <h1 class="page-title">Season One</h1>
+      <p class="subtitle">Text-first. Silence-forward. Links open to YouTube.</p>
+    </section>
+
+    <section id="episodes" class="episodes"></section>
+
+    <section class="panel">
+      <h2>Season Trailer (promo)</h2>
+      <p class="quiet">
+        Your future didn’t ask for proof. It assumed identity.
+        Some skills delay destiny. Some open doors are traps.
+        Leverage isn’t found. It’s stood in.
+        Standing costs you before it pays you.
+        And when alignment is real, it feels inevitable.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-title">IAMTHEEANSWER</div>
+        <div class="footer-sub">A spoken-word series by Eric Coker.</div>
+      </div>
+      <div class="footer-links">
+        <a href="https://ericcoker.com" target="_blank" rel="noreferrer">EricCoker.com</a>
+        <a href="https://trychrist.com" target="_blank" rel="noreferrer">TryChrist.com</a>
+        <a href="https://whosatthetable.com" target="_blank" rel="noreferrer">WhosAtMyTable.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/episodes.js"></script>
+  <script>
+    (function renderEpisodes(){
+      const root = document.getElementById('episodes');
+      const frag = document.createDocumentFragment();
+
+      window.IAM_EPISODES.forEach(ep => {
+        const el = document.createElement('article');
+        el.className = 'episode';
+
+        const top = document.createElement('div');
+        top.className = 'episode-top';
+
+        const meta = document.createElement('div');
+        meta.className = 'episode-meta';
+
+        const num = document.createElement('div');
+        num.className = 'ep-num';
+        num.textContent = `Episode ${ep.number}`;
+
+        const title = document.createElement('h3');
+        title.className = 'ep-title';
+        title.textContent = ep.title;
+
+        const blurb = document.createElement('p');
+        blurb.className = 'ep-blurb';
+        blurb.textContent = ep.blurb;
+
+        meta.appendChild(num);
+        meta.appendChild(title);
+        meta.appendChild(blurb);
+
+        const actions = document.createElement('div');
+        actions.className = 'episode-actions';
+
+        const btn = document.createElement('a');
+        btn.className = 'btn primary';
+        btn.textContent = 'Watch on YouTube';
+        btn.href = ep.youtubeUrl || '#';
+        if (!ep.youtubeUrl) {
+          btn.classList.add('disabled');
+          btn.setAttribute('aria-disabled', 'true');
+          btn.title = 'Add your YouTube link in assets/js/episodes.js';
+        } else {
+          btn.target = '_blank';
+          btn.rel = 'noreferrer';
+        }
+
+        actions.appendChild(btn);
+
+        top.appendChild(meta);
+        top.appendChild(actions);
+
+        const moments = document.createElement('div');
+        moments.className = 'moments';
+        moments.innerHTML = `
+          <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[0]}</div></div>
+          <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[1]}</div></div>
+          <div class="moment"><span class="tag">Anchor</span><div>${ep.moments[2]}</div></div>
+        `;
+
+        el.appendChild(top);
+        el.appendChild(moments);
+
+        frag.appendChild(el);
+      });
+
+      root.appendChild(frag);
+    })();
+  </script>
+</body>
+</html>
